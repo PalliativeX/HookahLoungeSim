@@ -5,8 +5,12 @@ public class UnitController : MonoBehaviour
 	public HookahMaker[] workers;
 
 	public LayerMask workerMask;
+	public LayerMask hookahMask;
+	public LayerMask tableMask;
 
 	Camera mainCam;
+
+	bool shiftPressed;
 
     void Start()
     {
@@ -15,13 +19,18 @@ public class UnitController : MonoBehaviour
 
     void Update()
     {
+		if (Input.GetKey(KeyCode.LeftShift))
+		{
+			shiftPressed = true;
+		}
+
 		if (Input.GetMouseButtonDown(0))
 		{
 			HandleWorkerSelection();
 		}
 		if (Input.GetMouseButtonDown(1))
 		{
-			HandleWorkerMovement();
+			HandleWorkerActions();
 		}
 	}
 
@@ -44,7 +53,7 @@ public class UnitController : MonoBehaviour
 		}
 	}
 
-	void HandleWorkerMovement()
+	void HandleWorkerActions()
 	{
 		HookahMaker hookahMaker = GetSelectedWorker();
 		if (hookahMaker == null)
@@ -55,10 +64,33 @@ public class UnitController : MonoBehaviour
 		{
 			LayerMask colliderMask = 1 << hit.collider.gameObject.layer;
 
-			hookahMaker.ClearActions();
-			hookahMaker.AddMoveAction(hit.point);
-		}
+			if (!shiftPressed)
+			{
+				hookahMaker.ClearActions();
+			}
 
+			if (colliderMask == hookahMask)
+			{
+				Hookah hookah = hit.collider.gameObject.GetComponent<Hookah>();
+				hookahMaker.AddTakeHookahAction(hookah);
+			}
+			else if (colliderMask == tableMask)
+			{
+				Table table = hit.collider.gameObject.GetComponent<Table>();
+				//if (hookahMaker.HasServedTable)
+				//{
+					hookahMaker.AddBringHookahAction(table);
+				//}
+				//else
+				//{
+				//	hookahMaker.AddServeTableAction(table);
+				//}
+			}
+			else
+			{
+				hookahMaker.AddMoveAction(hit.point);
+			}
+		}
 	}
 
 	void DeselectWorkers()

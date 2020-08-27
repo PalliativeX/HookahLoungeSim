@@ -14,3 +14,33 @@ public class MoveAction : Action
 		this.dest = dest;
 	}
 }
+
+public class TakeHookahAction : Action
+{
+	public Hookah hookah;
+
+	public TakeHookahAction(Hookah hookah)
+	{
+		this.hookah = hookah;
+	}
+}
+
+public class BringHookahAction : Action
+{
+	public Table table;
+
+	public BringHookahAction(Table table)
+	{
+		this.table = table;
+	}
+}
+
+public class ServeTableAction : Action
+{
+	public Table table;
+
+	public ServeTableAction(Table table)
+	{
+		this.table = table;
+	}
+}

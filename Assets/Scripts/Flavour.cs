@@ -18,6 +18,7 @@ public enum Taste
 	RedTea,
 }
 
+//[System.Serializable]
 public struct Flavour
 {
 	public FlavourGroup group;

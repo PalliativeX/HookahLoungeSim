@@ -7,13 +7,20 @@ public class Door : MonoBehaviour
 
 	public bool currentlyOpen;
 
-	void Update()
+	public void Open()
 	{
-		if (Input.GetKeyDown(KeyCode.O))
-		{
-			currentlyOpen = !currentlyOpen;
-			leftDoorAnimator.SetBool("Open", currentlyOpen);
-			rightDoorAnimator.SetBool("Open", currentlyOpen);
-		}
+		ChangeState(open: true);
+	}
+
+	public void Close()
+	{
+		ChangeState(open: false);
+	}
+
+	private void ChangeState(bool open)
+	{
+		currentlyOpen = open;
+		leftDoorAnimator.SetBool("Open", open);
+		rightDoorAnimator.SetBool("Open", open);
 	}
 }
