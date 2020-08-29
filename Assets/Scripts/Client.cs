@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.AI;
 
 public enum ClientStatus
@@ -10,13 +11,45 @@ public enum ClientStatus
 	Leaving
 }
 
+// TODO: We need to store the prefs to check whether they were satisfied!!!
+[System.Serializable]
+public struct ClientPrefs
+{
+	public FlavourGroup group;
+	public Taste taste;
+	public Strength strength;
+
+	public ClientPrefs(FlavourGroup group = FlavourGroup.None, Taste taste = Taste.None, Strength strength = Strength.None)
+	{
+		this.group = group;
+		this.taste = taste;
+		this.strength = strength;
+	}
+
+	public bool SatisfiesPrefs(Tobacco tobacco)
+	{
+		if (group != FlavourGroup.None && group != tobacco.flavour.group)
+		{
+			return false;
+		}
+		if (taste != Taste.None && taste != tobacco.flavour.taste)
+		{
+			return false;
+		}
+		if (strength != Strength.None && strength != tobacco.brand.strength)
+		{
+			return false;
+		}
+
+		return true;
+	}
+}
+
 public class Client : MonoBehaviour
 {
 	public ChatBubble bubble;
 	public NavMeshAgent agent;
-	public Flavour[] preferredFlavours;
-	public FlavourGroup preferredFlavourGroup;
-	public Strength  preferredStrength;
+	public ClientPrefs prefs;
 
 	Player player;
 
@@ -24,13 +57,15 @@ public class Client : MonoBehaviour
 	HookahMaker worker;
 	Table occupiedTable;
 	Hookah smokedHookah;
-
+	ClientPrefs currentPrefs;
 
 	float waitingTime;
+	bool prefsSatisfied;
 
     void Start()
     {
 		player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+		currentPrefs = new ClientPrefs();
 		Enter();
     }
 
@@ -48,32 +83,94 @@ public class Client : MonoBehaviour
 
 		if (status == ClientStatus.Waiting)
 		{
-			waitingTime += Time.deltaTime;
+			waitingTime += PlayTimer.Instance.TimePerFrame(); // is it delta time?
+
+			if (occupiedTable.Hookah != null)
+			{
+				smokedHookah = occupiedTable.Hookah;
+				status = ClientStatus.Smoking;
+				smokedHookah.SetActive();
+				prefsSatisfied = PrefsSatisfied();
+			}
+		}
+
+		if (status == ClientStatus.Smoking)
+		{
+			if (smokedHookah.Active)
+			{
+				// TODO: Add smoking animation there
+			}
+			else
+			{
+				status = ClientStatus.Leaving;
+				agent.SetDestination(player.entry.position);
+			}
 		}
 
 		if (status == ClientStatus.Leaving && NotMoving())
 		{
+			player.RemoveClient(this);
+			if (waitingTime > 0f)
+			{
+				CommentOnLounge();
+			}
 			Leave();
 		}
 
-		//if (!NotMoving())
-		{
-			//Debug.Log(transform.rotation.eulerAngles);
-			bubble.transform.localRotation = Quaternion.Euler(0, 50 + -transform.localRotation.eulerAngles.y, 0);
-		}
+		// NOTE: Updating chat bubble so that it does not rotate with a parent object
+		bubble.transform.localRotation = Quaternion.Euler(0, 50 + -transform.localRotation.eulerAngles.y, 0);
 	}
 
-	// TODO: Make this non-void
-	public void GetPreferences()
+	public string GetPrefs()
 	{
+		string prefsStr = "I want ";
+		currentPrefs = new ClientPrefs();
 
+		float rand = Random.Range(0f, 1f);
+		if (rand <= 0.33f)
+		{
+			switch (prefs.strength)
+			{
+				case Strength.Soft:
+					prefsStr += "a soft hookah";
+					currentPrefs.strength = Strength.Soft;
+					break;
+				case Strength.Medium:
+					prefsStr += "a medium strength hookah";
+					currentPrefs.strength = Strength.Medium;
+					break;
+				case Strength.Strong:
+					prefsStr += "a strong hookah";
+					currentPrefs.strength = Strength.Strong;
+					break;
+			}
+		}
+		else if (rand >= 0.33f && rand <= 0.66f)
+		{
+			string groupStr = prefs.group.ToString();
+			prefsStr += "a " + groupStr.ToLower() + " hookah";
+			currentPrefs.group = prefs.group;
+		}	
+		else if (rand >= 0.66f)
+		{
+			string tasteStr = prefs.taste.ToString();
+			prefsStr += "a " + tasteStr.ToLower() + " taste";
+			currentPrefs.taste = prefs.taste;
+		}
+
+		return prefsStr;
+	}
+
+	bool PrefsSatisfied()
+	{
+		return prefs.SatisfiesPrefs(smokedHookah.ContainedTobacco);
 	}
 
 	void Enter()
 	{
 		status = ClientStatus.Entered;
-		Vector3 advance = new Vector3(0.3f, 0, 0);
-		agent.SetDestination(agent.transform.position + advance);
+		//Vector3 advance = new Vector3(0.3f, 0, 0);
+		//agent.SetDestination(agent.transform.position + advance);
 	}
 
 	void LookForFreeTable()
@@ -83,8 +180,8 @@ public class Client : MonoBehaviour
 			occupiedTable = player.GetFreeTable();
 			occupiedTable.Occupied = true;
 			occupiedTable.ClientSitting = this;
-			Vector3 destToTable = Vector3.Lerp(agent.transform.position, occupiedTable.sofaPos.position, 0.95f);
 
+			Vector3 destToTable = Utils.ClosestPointOnSphere(transform.position, occupiedTable.approachPlace.position, 3 * 0.96f);
 			agent.SetDestination(destToTable);
 			status = ClientStatus.Approaching;
 		}
@@ -103,19 +200,45 @@ public class Client : MonoBehaviour
 	void Sit()
 	{
 		status = ClientStatus.Waiting;
-		//ChatBubble.Create(transform, new Vector3(1.5f, 1.5f), "I want something fresh!");
+		DisplayText(4f);
+	}
+
+	void DisplayText(float displayLength)
+	{
+		bubble.gameObject.SetActive(true);
+
+		bubble.Display(displayLength, GetPrefs());
 	}
 
 	void CommentOnLounge()
 	{
-		// TODO: Add actual calculation later
-		player.Rating += 5f;
+		float Rating = 5f;
+
+		if (waitingTime >= 30f)
+		{
+			Rating -= 1f;
+		}
+		if (!prefsSatisfied)
+		{
+			Rating -= 1f;
+		}
+
+		player.Rating += Rating;
+	}
+
+	// NOTE: This can get messy with huge speed, prob increase it by lower rates
+	public void UpdateSpeed(float playSpeed)
+	{
+		agent.speed *= playSpeed;
 	}
 
 	bool NotMoving()
 	{
+		Vector3 agentPos = agent.transform.position;
+		agentPos.y = 0f;
+
 		if (!agent.pathPending &&
-			Vector3.Distance(agent.destination, agent.transform.position) <= agent.stoppingDistance &&
+			Vector3.Distance(agent.destination, agentPos) <= agent.stoppingDistance &&
 			!agent.hasPath && agent.velocity.sqrMagnitude == 0f)
 		{
 			return true;

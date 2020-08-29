@@ -1,15 +1,19 @@
 ﻿
 // NOTE: A generic division of tastes
+[System.Serializable]
 public enum FlavourGroup
 {
+	None,
 	Berries,
 	Fresh,
 	Spicy,
 	Fruit
 }
 
+[System.Serializable]
 public enum Taste
 {
+	None,
 	Mint,
 	Cherry,
 	DoubleApple,
@@ -18,8 +22,8 @@ public enum Taste
 	RedTea,
 }
 
-//[System.Serializable]
-public struct Flavour
+[System.Serializable]
+public class Flavour
 {
 	public FlavourGroup group;
 	public Taste taste;

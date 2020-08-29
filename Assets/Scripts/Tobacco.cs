@@ -1,8 +1,7 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
-
+﻿
 public enum Strength
 {
+	None,
 	Soft,
 	Medium,
 	Strong
@@ -15,53 +14,39 @@ public enum HeatTolerance
 	Heatproof
 }
 
+[System.Serializable]
 public class Brand
 {
-	public string name; // Dairy Qookah
+	public string name;
 	public Strength strength;
 	public HeatTolerance heatTolerance;
 	public float smokingTime;
-	public Flavour[] flavours;
 
-	public Brand(string name, Strength strength, HeatTolerance heatTolerance, float smokingTime, Flavour[] flavours)
+	public Brand(string name, Strength strength, HeatTolerance heatTolerance, float smokingTime)
 	{
 		this.name = name;
 		this.strength = strength;
 		this.heatTolerance = heatTolerance;
 		this.smokingTime = smokingTime;
-		this.flavours = (Flavour[])flavours.Clone(); // prob needs deep copy or test
+	}
+}
+
+[System.Serializable]
+public class Tobacco
+{
+	public Brand brand;
+	public Flavour flavour;
+
+	public Tobacco(string brandName, Strength brandStrength, HeatTolerance brandHeatTolerance, float brandSmokingTime, Flavour flavour)
+	{
+		this.brand = new Brand(brandName, brandStrength, brandHeatTolerance, brand.smokingTime);
+		this.flavour = flavour;
 	}
 
-	public bool HasFlavour(Flavour specifiedFlavour)
+	public Tobacco(Brand brand, Flavour flavour)
 	{
-		foreach (Flavour flavour in flavours)
-		{
-			if (specifiedFlavour == flavour)
-				return true;
-		}
-
-		return false;
-	}
-
-	public Flavour GetRandomFlavour()
-	{
-		return flavours[Random.Range(0, flavours.Length - 1)];
-	}
-
-	// Get random fresh, berry, fruit taste, etc.
-	public Taste GetRndTasteByGroup(FlavourGroup group)
-	{
-		List<Taste> tastes = new List<Taste>();
-
-		foreach (Flavour fl in flavours)
-		{
-			if (fl.group == group)
-			{
-				tastes.Add(fl.taste);
-			}
-		}
-
-		return tastes[Random.Range(0, flavours.Length - 1)];
+		this.brand = brand;
+		this.flavour = flavour;
 	}
 
 }

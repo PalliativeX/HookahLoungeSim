@@ -34,13 +34,3 @@ public class BringHookahAction : Action
 		this.table = table;
 	}
 }
-
-public class ServeTableAction : Action
-{
-	public Table table;
-
-	public ServeTableAction(Table table)
-	{
-		this.table = table;
-	}
-}

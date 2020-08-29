@@ -5,14 +5,15 @@ public class Player : MonoBehaviour
 {
 	public float startingMoney = 1000f;
 	public WorkingHours workingHours;
-	public PlayTimer playTimer;
+	//public PlayTimer playTimer;
 	public Table[] tables;
 	public Hookah[] hookahs;
+	public HookahMaker[] workers;
 	public List<Client> clients;
 
-	public Transform entry;
+	public Tobacco[] tobaccos;
 
-	public Transform chatBubblePrefab;
+	public Transform entry;
 
 	PlayerGUI playerGUI;
 	float money;
@@ -26,12 +27,27 @@ public class Player : MonoBehaviour
 		workStatus = WorkStatus.Open;
 		money = startingMoney;
 		rating = 0;
-		ChatBubble.prefab = chatBubblePrefab;
+		commentCount = 0;
 	}
 
 	private void Update()
 	{
-		WorkStatus = playTimer.GetStatus(workingHours);
+		WorkStatus = PlayTimer.Instance.GetStatus(workingHours);
+
+		if (PlayTimer.Instance.SpeedChanged)
+		{
+
+			foreach (Client client in clients)
+			{
+				client.UpdateSpeed(PlayTimer.Instance.playSpeed);
+			}
+			foreach (HookahMaker hookahMaker in workers)
+			{
+				hookahMaker.UpdateSpeed(PlayTimer.Instance.playSpeed);
+			}
+
+			PlayTimer.Instance.SpeedChanged = false;
+		}
 	}
 
 	public bool HasFreeTables()
@@ -74,14 +90,38 @@ public class Player : MonoBehaviour
 		return null;
 	}
 
-	public float GetPlaySpeed()
+
+	public bool HasFlavour(Flavour specifiedFlavour)
 	{
-		return playTimer.playSpeed;
+		foreach (Tobacco tobacco in tobaccos)
+		{
+			if (specifiedFlavour == tobacco.flavour)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public Flavour GetRandomFlavour()
+	{
+		return tobaccos[Random.Range(0, tobaccos.Length - 1)].flavour;
+	}
+
+	public Tobacco GetRandomTobacco()
+	{
+		return tobaccos[Random.Range(0, tobaccos.Length - 1)];
 	}
 
 	public void AddClient(Client newClient)
 	{
 		clients.Add(newClient);
+	}
+
+	public void RemoveClient(Client client)
+	{
+		clients.Remove(client);
 	}
 
 	public float Money

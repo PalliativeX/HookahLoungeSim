@@ -8,13 +8,13 @@ public class UnitController : MonoBehaviour
 	public LayerMask hookahMask;
 	public LayerMask tableMask;
 
-	Camera mainCam;
+	Camera mainCamera;
 
 	bool shiftPressed;
 
     void Start()
     {
-		mainCam = Camera.main;
+		mainCamera = Camera.main;
     }
 
     void Update()
@@ -38,7 +38,7 @@ public class UnitController : MonoBehaviour
 	{
 		DeselectWorkers();
 
-		Ray inputRay = mainCam.ScreenPointToRay(Input.mousePosition);
+		Ray inputRay = mainCamera.ScreenPointToRay(Input.mousePosition);
 		if (Physics.Raycast(inputRay, out RaycastHit hit))
 		{
 			if (hit.collider != null)
@@ -59,7 +59,7 @@ public class UnitController : MonoBehaviour
 		if (hookahMaker == null)
 			return;
 
-		Ray inputRay = mainCam.ScreenPointToRay(Input.mousePosition);
+		Ray inputRay = mainCamera.ScreenPointToRay(Input.mousePosition);
 		if (Physics.Raycast(inputRay, out RaycastHit hit))
 		{
 			LayerMask colliderMask = 1 << hit.collider.gameObject.layer;
@@ -77,14 +77,7 @@ public class UnitController : MonoBehaviour
 			else if (colliderMask == tableMask)
 			{
 				Table table = hit.collider.gameObject.GetComponent<Table>();
-				//if (hookahMaker.HasServedTable)
-				//{
-					hookahMaker.AddBringHookahAction(table);
-				//}
-				//else
-				//{
-				//	hookahMaker.AddServeTableAction(table);
-				//}
+				hookahMaker.AddBringHookahAction(table);
 			}
 			else
 			{

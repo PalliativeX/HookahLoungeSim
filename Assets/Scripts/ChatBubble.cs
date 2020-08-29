@@ -10,23 +10,15 @@ public class ChatBubble : MonoBehaviour
 
 	public static Transform prefab;
 
-	public static void Create(Transform parent, Vector3 localPos, string text)
-	{
-		Transform chatBubbleTransform = Instantiate(prefab, parent);
-		chatBubbleTransform.localPosition = localPos;
-
-		chatBubbleTransform.GetComponent<ChatBubble>().SetUp(text);
-	}
-
 	private void Awake()
 	{
 		backgroundSpriteRenderer = transform.Find("Background").GetComponent<SpriteRenderer>();
 		textMeshPro = transform.Find("Text").GetComponent<TextMeshPro>();
 	}
 
-	void Start()
+	public void SetText(string text)
 	{
-		SetUp("Hello world and enjoy bruh");
+		SetUp(text);
 	}
 
 	void SetUp(string text)
@@ -36,5 +28,24 @@ public class ChatBubble : MonoBehaviour
 		Vector2 textSize = textMeshPro.GetRenderedValues(false);
 		Vector2 padding = new Vector2(4f, 2f);
 		backgroundSpriteRenderer.size = textSize + padding;
+	}
+
+	public void Display(float displayLength, string text)
+	{
+		StartCoroutine(DisplayFixedTime(displayLength, text));
+	}
+
+	IEnumerator DisplayFixedTime(float displayLength, string text)
+	{
+		SetText(text);
+
+		while (displayLength > 0)
+		{
+			displayLength -= PlayTimer.Instance.TimePerFrame();
+
+			yield return null;
+		}
+
+		gameObject.SetActive(false);
 	}
 }

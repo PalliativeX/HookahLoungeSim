@@ -1,22 +1,33 @@
 ﻿using System;
 using UnityEngine;
 
-/* 
- * For now 1 realtime second == 1 ingame minute ~
- * However, we can have different FPS, so fix this approach,
- * Maybe restrict the FPS to 60
- */
 public class PlayTimer : MonoBehaviour
 {
-	public int startingYear, startingMonth, startingDay;
-	public int startingHours;
-	public float advance = 0.2f; // NOTE: Advance in game seconds per frame
+	private static PlayTimer instance;
+
+	public static PlayTimer Instance { get { return instance; } }
 
 	public float playSpeed;
+	public int startingYear, startingMonth, startingDay;
+	public int startingHours;
 
-	DateTime playTime;
+	public bool SpeedChanged { get; set; }
 
-    void Start()
+	DateTime playTime; // NOTE: By default 1 realtime second == 1 ingame minute
+
+	void Awake()
+	{
+		if (instance != null && instance != this)
+		{
+			Destroy(gameObject);
+		}
+		else
+		{
+			instance = this;
+		}
+	}
+
+	void Start()
     {
 		playTime = new DateTime(startingYear, startingMonth, startingDay, 
 							    startingHours, 0, 0);
@@ -25,19 +36,20 @@ public class PlayTimer : MonoBehaviour
 
     void Update()
     {
-		playTime = playTime.AddSeconds(advance);
-
 		if (Input.GetKeyDown(KeyCode.PageUp))
 		{
-			advance *= 2f;
 			playSpeed *= 2f;
+			SpeedChanged = true;
 		}
 		else if (Input.GetKeyDown(KeyCode.PageDown))
 		{
-			advance /= 2f;
 			playSpeed /= 2f;
+			SpeedChanged = true;
 		}
-    }
+
+		// NOTE: We convert 1 realtime second to 1 ingame minute
+		playTime = playTime.AddMinutes(Time.deltaTime * playSpeed);
+	}
 
 	public DateTime GetTime()
 	{
@@ -48,6 +60,11 @@ public class PlayTimer : MonoBehaviour
 	public string GetTimeStr()
 	{
 		return playTime.ToString("hh:mm dddd yyyy", System.Globalization.CultureInfo.InvariantCulture);
+	}
+
+	public float TimePerFrame()
+	{
+		return (Time.deltaTime * playSpeed);
 	}
 
 	public WorkStatus GetStatus(WorkingHours workingHours)

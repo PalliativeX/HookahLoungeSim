@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class Door : MonoBehaviour
 {
@@ -7,8 +8,16 @@ public class Door : MonoBehaviour
 
 	public bool currentlyOpen;
 
-	public void Open()
+	public IEnumerator Open()
 	{
+		float timeToOpen = 2f;
+
+		while (timeToOpen > 0f)
+		{
+			timeToOpen -= PlayTimer.Instance.TimePerFrame();
+			yield return null;
+		}
+
 		ChangeState(open: true);
 	}
 
@@ -20,7 +29,9 @@ public class Door : MonoBehaviour
 	private void ChangeState(bool open)
 	{
 		currentlyOpen = open;
+		leftDoorAnimator.speed = PlayTimer.Instance.playSpeed;
 		leftDoorAnimator.SetBool("Open", open);
+		rightDoorAnimator.speed = PlayTimer.Instance.playSpeed;
 		rightDoorAnimator.SetBool("Open", open);
 	}
 }

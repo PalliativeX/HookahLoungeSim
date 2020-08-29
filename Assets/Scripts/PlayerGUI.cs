@@ -2,6 +2,8 @@
 
 public class PlayerGUI : MonoBehaviour
 {
+	const int maxRatingLength = 3;
+
 	public TMPro.TMP_Text ratingText, moneyText, timeText;
 	public TMPro.TMP_Text statusSignText;
 
@@ -27,12 +29,17 @@ public class PlayerGUI : MonoBehaviour
 
 	public void UpdateTimeText()
 	{
-		timeText.text = player.playTimer.GetTimeStr();
+		timeText.text = PlayTimer.Instance.GetTimeStr();
 	}
 
 	public void UpdateRatingText()
 	{
-		ratingText.text = player.Rating.ToString();
+		string ratingTextStr = player.Rating.ToString();
+		if (ratingTextStr.Length > maxRatingLength)
+		{
+			ratingTextStr = ratingTextStr.Substring(0, maxRatingLength);
+		}	
+		ratingText.text = ratingTextStr;
 	}
 
 	public void UpdateStatusSignText()

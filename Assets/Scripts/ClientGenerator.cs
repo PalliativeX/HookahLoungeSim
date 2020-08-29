@@ -1,57 +1,63 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-// TODO: Rename and refactor so that it's more readable
 public class ClientGenerator : MonoBehaviour
 {
-	public Client[] clientPrefabs;
-	public Door door;
-
-	public Transform spawnPlace;
-	public Player player;
 	public float minWaitMinutes;
 	public float maxWaitMinutes;
-
-	float timePassed;
+	public Client[] clientPrefabs;
+	public Door door;
+	public Transform spawnPlace;
+	public Player player;
 
 	bool waiting;
 
 	void Update()
 	{
-		if (!waiting)
+		if (!waiting && player.WorkStatus == WorkStatus.Open)
 		{
-			StartCoroutine(WaitAndGenerate());
+			StartCoroutine(GenerateClientAfterDelay());
 		}
 	}
 
-	IEnumerator WaitAndGenerate()
+	IEnumerator GenerateClientAfterDelay()
 	{
 		waiting = true;
-		yield return new WaitForSeconds(Random.Range(minWaitMinutes, maxWaitMinutes) / player.GetPlaySpeed());
 
-		yield return StartCoroutine(GenerateClientAfterWait(2f));
+		yield return StartCoroutine(Wait());
+
+		yield return StartCoroutine(door.Open());
+
+		GenerateClient();
+
 		waiting = false;
 	}
 
-	// NOTE: We wait before the door opens
-	IEnumerator GenerateClientAfterWait(float seconds)
+	IEnumerator Wait()
 	{
-		door.Open();
-
-		yield return new WaitForSeconds(seconds / player.GetPlaySpeed());
-
-		GenerateClient();
+		float popularity = CalculatePopularity();
+		float timeToWait = Random.Range(minWaitMinutes, maxWaitMinutes) / popularity;
+		while (timeToWait > 0f)
+		{
+			timeToWait -= PlayTimer.Instance.TimePerFrame();
+			yield return null;
+		}
 	}
 
-	void CalculatePopularity()
+	float CalculatePopularity()
 	{
-		float popularity = player.Rating;
+		float popularitySpawnIncrease = 1;
+
+		popularitySpawnIncrease += player.Rating / 5f;
+
+		return popularitySpawnIncrease;
 	}
 
 	void GenerateClient()
 	{
 		Client newClient = Instantiate(clientPrefabs[Random.Range(0, clientPrefabs.Length)]);
 		newClient.transform.position = spawnPlace.position;
+		player.AddClient(newClient);
 	}
 
 }
