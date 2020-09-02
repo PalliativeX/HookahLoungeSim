@@ -3,9 +3,7 @@ using UnityEngine;
 
 public class PlayTimer : MonoBehaviour
 {
-	private static PlayTimer instance;
-
-	public static PlayTimer Instance { get { return instance; } }
+	public static PlayTimer Instance { get; private set; }
 
 	public float playSpeed;
 	public int startingYear, startingMonth, startingDay;
@@ -17,13 +15,13 @@ public class PlayTimer : MonoBehaviour
 
 	void Awake()
 	{
-		if (instance != null && instance != this)
+		if (Instance != null && Instance != this)
 		{
 			Destroy(gameObject);
 		}
 		else
 		{
-			instance = this;
+			Instance = this;
 		}
 	}
 

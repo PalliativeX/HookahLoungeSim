@@ -1,35 +1,4 @@
 ﻿
-public enum Strength
-{
-	None,
-	Soft,
-	Medium,
-	Strong
-}
-
-public enum HeatTolerance
-{
-	Weak,
-	Medium,
-	Heatproof
-}
-
-[System.Serializable]
-public class Brand
-{
-	public string name;
-	public Strength strength;
-	public HeatTolerance heatTolerance;
-	public float smokingTime;
-
-	public Brand(string name, Strength strength, HeatTolerance heatTolerance, float smokingTime)
-	{
-		this.name = name;
-		this.strength = strength;
-		this.heatTolerance = heatTolerance;
-		this.smokingTime = smokingTime;
-	}
-}
 
 [System.Serializable]
 public class Tobacco
@@ -37,9 +6,9 @@ public class Tobacco
 	public Brand brand;
 	public Flavour flavour;
 
-	public Tobacco(string brandName, Strength brandStrength, HeatTolerance brandHeatTolerance, float brandSmokingTime, Flavour flavour)
+	public Tobacco(string brandName, Strength brandStrength, HeatTolerance brandHeatTolerance, float brandSmokingTime, float brandPrice, Flavour flavour)
 	{
-		this.brand = new Brand(brandName, brandStrength, brandHeatTolerance, brand.smokingTime);
+		this.brand = new Brand(brandName, brandStrength, brandHeatTolerance, brandSmokingTime, brandPrice);
 		this.flavour = flavour;
 	}
 
@@ -49,4 +18,20 @@ public class Tobacco
 		this.flavour = flavour;
 	}
 
+	public string NameStr()
+	{
+		return brand.name + " " + flavour.taste.ToString();
+	}
+
+	public override string ToString()
+	{
+		return
+			"Name: " + brand.name + "\n" +
+			"Strength: " + brand.strength + "\n" +
+			"Heat tolerance: " + brand.heatTolerance + "\n" +
+			"Smoking time: " + brand.smokingTime + " minutes" + "\n" +
+			"Flavour group: " + flavour.group + "\n" +
+			"Taste: " + flavour.taste;
+			
+	}
 }

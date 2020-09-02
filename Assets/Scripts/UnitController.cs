@@ -2,7 +2,7 @@
 
 public class UnitController : MonoBehaviour
 {
-	public HookahMaker[] workers;
+	Player player;
 
 	public LayerMask workerMask;
 	public LayerMask hookahMask;
@@ -15,6 +15,7 @@ public class UnitController : MonoBehaviour
     void Start()
     {
 		mainCamera = Camera.main;
+		player = GetComponent<Player>();
     }
 
     void Update()
@@ -72,7 +73,7 @@ public class UnitController : MonoBehaviour
 			if (colliderMask == hookahMask)
 			{
 				Hookah hookah = hit.collider.gameObject.GetComponent<Hookah>();
-				hookahMaker.AddTakeHookahAction(hookah);
+				hookahMaker.AddChooseTobaccoAction(hookah);
 			}
 			else if (colliderMask == tableMask)
 			{
@@ -88,7 +89,7 @@ public class UnitController : MonoBehaviour
 
 	void DeselectWorkers()
 	{
-		foreach (HookahMaker hookahMaker in workers)
+		foreach (HookahMaker hookahMaker in player.workers)
 		{
 			hookahMaker.Selected = false;
 		}
@@ -96,7 +97,7 @@ public class UnitController : MonoBehaviour
 
 	HookahMaker GetSelectedWorker()
 	{
-		foreach (HookahMaker hookahMaker in workers)
+		foreach (HookahMaker hookahMaker in player.workers)
 		{
 			if (hookahMaker.Selected)
 				return hookahMaker;

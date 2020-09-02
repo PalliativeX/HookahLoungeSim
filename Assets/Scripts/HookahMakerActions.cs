@@ -17,11 +17,11 @@ public class MoveAction : Action
 
 public class TakeHookahAction : Action
 {
-	public Hookah hookah;
+	public Tobacco tobacco;
 
-	public TakeHookahAction(Hookah hookah)
+	public TakeHookahAction(Tobacco tobacco)
 	{
-		this.hookah = hookah;
+		this.tobacco = tobacco;
 	}
 }
 
@@ -32,5 +32,15 @@ public class BringHookahAction : Action
 	public BringHookahAction(Table table)
 	{
 		this.table = table;
+	}
+}
+
+public class ChooseTobaccoAction : Action
+{
+	public Hookah hookah;
+
+	public ChooseTobaccoAction(Hookah hookah)
+	{
+		this.hookah = hookah;
 	}
 }

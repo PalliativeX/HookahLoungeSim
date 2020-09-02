@@ -46,4 +46,5 @@ public class PlayerGUI : MonoBehaviour
 	{
 		statusSignText.text = (player.WorkStatus == WorkStatus.Open ? "OPEN" : "CLOSED");
 	}
+
 }

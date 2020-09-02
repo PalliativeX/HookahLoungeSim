@@ -84,7 +84,9 @@ MonoBehaviour:
     group: 1
     taste: 0
     strength: 0
-    heatTolerance: 1
+  onHookahBrought:
+  - I've wanted this for so long!
+  - The f*ck is this???
 --- !u!195 &-3409222057948500176
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -3154,12 +3156,12 @@ PrefabInstance:
     - target: {fileID: 3786412785598870168, guid: a50a51eb722767440b6a86ea5e707ab9,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.002
+      value: -0.047
       objectReference: {fileID: 0}
     - target: {fileID: 3786412785598870168, guid: a50a51eb722767440b6a86ea5e707ab9,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.382
+      value: 1.29
       objectReference: {fileID: 0}
     - target: {fileID: 3786412785598870168, guid: a50a51eb722767440b6a86ea5e707ab9,
         type: 3}

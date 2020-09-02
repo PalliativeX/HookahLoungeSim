@@ -7,7 +7,10 @@ public enum FlavourGroup
 	Berries,
 	Fresh,
 	Spicy,
-	Fruit
+	Fruit,
+	Pastries,
+	Sweet,
+	Exotic
 }
 
 [System.Serializable]
@@ -16,10 +19,33 @@ public enum Taste
 	None,
 	Mint,
 	Cherry,
+	Apple,
 	DoubleApple,
 	Bacon,
+	Blueberry,
+	Lime,
+	IceGrape,
+	Melon,
+	Jelibon,
+	Raspberry,
+	Cola,
+	Chocolate,
+	Chestnut,
+	Cinnamon,
+	Coffee,
+	Energetic,
+	CherryCake,
 	Banana,
 	RedTea,
+	Grape,
+	Cream,
+	Orange,
+	Strawberry,
+	Cheesecake,
+	Mango,
+	Lemon,
+	Peach,
+	Pear
 }
 
 [System.Serializable]

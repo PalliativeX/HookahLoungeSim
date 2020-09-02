@@ -7,25 +7,23 @@ public class HookahMaker : MonoBehaviour
 	public NavMeshAgent agent;
 	public GameObject selectionCircle;
 	public Transform hookahCarryPos;
+	public TobaccoSelectionPanel tobaccoPanel;
 
-	Player player;
+	KeyCode CloseChoosingTobaccoPanel = KeyCode.Escape;
 
 	bool selected;
 
 	Hookah servedHookah;
+	bool choosingTobacco;
 	bool carryingHookah;
 	Table servedTable;
-
-	public Location CurrentLoc { get; set; }
 
 	Queue<Action> actions;
 	Action currentAction;
 
 	void Start()
 	{
-		CurrentLoc = Location.Lounge;
 		actions = new Queue<Action>();
-		player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
 	}
 
 	void Update()
@@ -43,6 +41,10 @@ public class HookahMaker : MonoBehaviour
 			{
 				Move(moveAction.dest);
 			}
+			else if (currentAction is ChooseTobaccoAction chooseAction)
+			{
+				HandleChooseTobaccoAction(chooseAction);
+			}
 			else if (currentAction is TakeHookahAction takeAction)
 			{
 				HandleTakeHookahAction(takeAction);
@@ -51,6 +53,11 @@ public class HookahMaker : MonoBehaviour
 			{
 				HandleBringHookahAction(bringAction);
 			}
+		}
+
+		if (Input.GetKeyDown(CloseChoosingTobaccoPanel) && choosingTobacco)
+		{
+			CancelChoosingTobacco();
 		}
 
 		if (AgentNotMoving() && currentAction != null)
@@ -65,11 +72,11 @@ public class HookahMaker : MonoBehaviour
 		agent.destination = dest;
 	}
 
-	void HandleTakeHookahAction(TakeHookahAction takeAction)
+	void HandleChooseTobaccoAction(ChooseTobaccoAction chooseAction)
 	{
 		if (!carryingHookah)
 		{
-			Hookah hookah = takeAction.hookah;
+			Hookah hookah = chooseAction.hookah;
 
 			float range = 5f;
 			if (Vector3.Distance(transform.position, hookah.transform.position) > range)
@@ -78,19 +85,26 @@ public class HookahMaker : MonoBehaviour
 
 				Vector3 closestPoint = Utils.ClosestPointOnSphere(transform.position, hookah.transform.position, range * 0.96f);
 				AddMoveAction(closestPoint);
-				AddTakeHookahAction(hookah);
+				AddChooseTobaccoAction(hookah);
 			}
 			else
 			{
+				choosingTobacco = true;
 				servedHookah = hookah;
-				servedHookah.transform.SetParent(transform);
-				servedHookah.transform.position = hookahCarryPos.position;
-				servedHookah.ContainedTobacco = ChooseTobacco();
-				servedHookah.GetComponent<Collider>().enabled = false;
-				carryingHookah = true;
-				currentAction = null;
+				DisplayTobaccoPanel(true);
 			}
 		}
+	}
+
+	void HandleTakeHookahAction(TakeHookahAction takeAction)
+	{
+		servedHookah.GetComponent<Collider>().enabled = false;
+		servedHookah.transform.SetParent(transform);
+		servedHookah.transform.position = hookahCarryPos.position;
+		servedHookah.ContainedTobacco = takeAction.tobacco;
+		carryingHookah = true;
+		choosingTobacco = false;
+		currentAction = null;
 	}
 
 	void HandleBringHookahAction(BringHookahAction bringAction)
@@ -115,10 +129,24 @@ public class HookahMaker : MonoBehaviour
 		}
 	}
 
-	// TODO: This should take into account client prefs
-	Tobacco ChooseTobacco()
+	public void ChooseTobacco()
 	{
-		return player.GetRandomTobacco();
+		currentAction = null;
+		AddTakeHookahAction(tobaccoPanel.FinallyChosenTobacco);
+		DisplayTobaccoPanel(false);
+	}
+
+	public void CancelChoosingTobacco()
+	{
+		choosingTobacco = false;
+		currentAction = null;
+		DisplayTobaccoPanel(false);
+		servedHookah = null;
+	}
+
+	void DisplayTobaccoPanel(bool toggle)
+	{
+		tobaccoPanel.gameObject.SetActive(toggle);
 	}
 
 	public void AddAction(Action action)
@@ -128,15 +156,23 @@ public class HookahMaker : MonoBehaviour
 
 	public void AddMoveAction(Vector3 dest)
 	{
-		actions.Enqueue(new MoveAction(dest));
+		if (!choosingTobacco)
+		{
+			actions.Enqueue(new MoveAction(dest));
+		}
 	}
 
-	public void AddTakeHookahAction(Hookah hookah)
+	public void AddChooseTobaccoAction(Hookah hookah)
 	{
 		if (!carryingHookah)
 		{
-			actions.Enqueue(new TakeHookahAction(hookah));
+			actions.Enqueue(new ChooseTobaccoAction(hookah));
 		}
+	}
+
+	public void AddTakeHookahAction(Tobacco tobacco)
+	{
+		actions.Enqueue(new TakeHookahAction(tobacco));
 	}
 
 	public void AddBringHookahAction(Table table)

@@ -1,0 +1,53 @@
+﻿using UnityEngine;
+using TMPro;
+
+public class TobaccoSelectionPanel : MonoBehaviour
+{
+    public TMP_Dropdown dropdown;
+    public TMPro.TMP_Text label;
+    public TMPro.TMP_Text description;
+    Player player;
+
+    int currentValue;
+    Tobacco[] tobaccos;
+
+    public Tobacco FinallyChosenTobacco { get; set; }
+
+    void Start()
+    {
+        player = FindObjectOfType<Player>();
+        tobaccos = player.GetTobaccos();
+        InitDropdown();
+        OnValueChanged();
+        UpdateDescription();
+    }
+
+    void InitDropdown()
+    {
+        dropdown.options.Clear();
+
+        foreach (Tobacco tobacco in tobaccos)
+        {
+            dropdown.options.Add(new TMP_Dropdown.OptionData(tobacco.NameStr()));
+        }
+        dropdown.value = currentValue;
+        dropdown.options[currentValue].text = tobaccos[currentValue].NameStr(); 
+    }
+
+    void UpdateDescription()
+    {
+        description.text = tobaccos[currentValue].ToString();
+    }
+
+    public void OnValueChanged()
+    {
+        currentValue = dropdown.value;
+        label.text = tobaccos[dropdown.value].NameStr();
+        UpdateDescription();
+    }
+
+    public void ChooseTobacco()
+    {
+        FinallyChosenTobacco = tobaccos[currentValue];
+    }
+}

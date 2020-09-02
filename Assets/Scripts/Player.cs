@@ -1,17 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
+
+
 
 public class Player : MonoBehaviour
 {
 	public float startingMoney = 1000f;
 	public WorkingHours workingHours;
-	//public PlayTimer playTimer;
+
 	public Table[] tables;
 	public Hookah[] hookahs;
 	public HookahMaker[] workers;
-	public List<Client> clients;
-
 	public Tobacco[] tobaccos;
+
+	List<Client> clients;
 
 	public Transform entry;
 
@@ -24,10 +27,9 @@ public class Player : MonoBehaviour
 	void Awake()
 	{
 		playerGUI = GetComponent<PlayerGUI>();
+		clients = new List<Client>();
 		workStatus = WorkStatus.Open;
 		money = startingMoney;
-		rating = 0;
-		commentCount = 0;
 	}
 
 	private void Update()
@@ -36,11 +38,7 @@ public class Player : MonoBehaviour
 
 		if (PlayTimer.Instance.SpeedChanged)
 		{
-
-			foreach (Client client in clients)
-			{
-				client.UpdateSpeed(PlayTimer.Instance.playSpeed);
-			}
+			clients.ForEach(client => client.UpdateSpeed(PlayTimer.Instance.playSpeed));
 			foreach (HookahMaker hookahMaker in workers)
 			{
 				hookahMaker.UpdateSpeed(PlayTimer.Instance.playSpeed);
@@ -52,56 +50,27 @@ public class Player : MonoBehaviour
 
 	public bool HasFreeTables()
 	{
-		foreach (Table table in tables)
-		{
-			if (!table.Occupied)
-				return true;
-		}
-		return false;
+		return tables.Any(table => !table.Occupied);
 	}
 
 	public Table GetFreeTable()
 	{
-		foreach (Table table in tables)
-		{
-			if (!table.Occupied)
-				return table;
-		}
-		return null;
+		return tables.First(table => !table.Occupied);
 	}
 
 	public bool HasFreeHookahs()
 	{
-		foreach (Hookah hookah in hookahs)
-		{
-			if (!hookah.Occupied)
-				return true;
-		}
-		return false;
+		return hookahs.Any(hookah => !hookah.Occupied);
 	}
 
 	public Hookah GetFreeHookah()
 	{
-		foreach (Hookah hookah in hookahs)
-		{
-			if (!hookah.Occupied)
-				return hookah;
-		}
-		return null;
+		return hookahs.First(hookah => !hookah.Occupied);
 	}
-
 
 	public bool HasFlavour(Flavour specifiedFlavour)
 	{
-		foreach (Tobacco tobacco in tobaccos)
-		{
-			if (specifiedFlavour == tobacco.flavour)
-			{
-				return true;
-			}
-		}
-
-		return false;
+		return tobaccos.Any(tobacco => specifiedFlavour == tobacco.flavour);
 	}
 
 	public Flavour GetRandomFlavour()
@@ -112,6 +81,11 @@ public class Player : MonoBehaviour
 	public Tobacco GetRandomTobacco()
 	{
 		return tobaccos[Random.Range(0, tobaccos.Length - 1)];
+	}
+
+	public Tobacco[] GetTobaccos()
+	{
+		return tobaccos;
 	}
 
 	public void AddClient(Client newClient)
@@ -152,19 +126,6 @@ public class Player : MonoBehaviour
 		}
 	}
 
-}
-
-[System.Serializable]
-public struct WorkingHours
-{
-	public int beginning;
-	public int ending;
-
-	public WorkingHours(int beginning, int ending)
-	{
-		this.beginning = beginning;
-		this.ending = ending;
-	}
 }
 
 public enum WorkStatus

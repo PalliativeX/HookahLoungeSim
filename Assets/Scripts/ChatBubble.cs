@@ -5,10 +5,11 @@ using TMPro;
 
 public class ChatBubble : MonoBehaviour
 {
+	public float initialRotation = 45f;
+	public static Transform prefab;
+	
 	private SpriteRenderer backgroundSpriteRenderer;
 	private TextMeshPro textMeshPro;
-
-	public static Transform prefab;
 
 	private void Awake()
 	{

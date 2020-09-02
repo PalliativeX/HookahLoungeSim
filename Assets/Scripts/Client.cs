@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
 
 public enum ClientStatus
@@ -11,7 +10,6 @@ public enum ClientStatus
 	Leaving
 }
 
-// TODO: We need to store the prefs to check whether they were satisfied!!!
 [System.Serializable]
 public struct ClientPrefs
 {
@@ -50,6 +48,7 @@ public class Client : MonoBehaviour
 	public ChatBubble bubble;
 	public NavMeshAgent agent;
 	public ClientPrefs prefs;
+	public string[] onHookahBrought;
 
 	Player player;
 
@@ -62,9 +61,10 @@ public class Client : MonoBehaviour
 	float waitingTime;
 	bool prefsSatisfied;
 
+
     void Start()
     {
-		player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+		player = FindObjectOfType<Player>();
 		currentPrefs = new ClientPrefs();
 		Enter();
     }
@@ -83,7 +83,7 @@ public class Client : MonoBehaviour
 
 		if (status == ClientStatus.Waiting)
 		{
-			waitingTime += PlayTimer.Instance.TimePerFrame(); // is it delta time?
+			waitingTime += PlayTimer.Instance.TimePerFrame();
 
 			if (occupiedTable.Hookah != null)
 			{
@@ -91,6 +91,7 @@ public class Client : MonoBehaviour
 				status = ClientStatus.Smoking;
 				smokedHookah.SetActive();
 				prefsSatisfied = PrefsSatisfied();
+				DisplayText(prefsSatisfied ? onHookahBrought[0] : onHookahBrought[1], 3f);
 			}
 		}
 
@@ -113,12 +114,13 @@ public class Client : MonoBehaviour
 			if (waitingTime > 0f)
 			{
 				CommentOnLounge();
+				player.Money += smokedHookah.ContainedTobacco.brand.price;
 			}
 			Leave();
 		}
 
 		// NOTE: Updating chat bubble so that it does not rotate with a parent object
-		bubble.transform.localRotation = Quaternion.Euler(0, 50 + -transform.localRotation.eulerAngles.y, 0);
+		bubble.transform.localRotation = Quaternion.Euler(0, bubble.initialRotation + -transform.localRotation.eulerAngles.y, 0);
 	}
 
 	public string GetPrefs()
@@ -126,8 +128,7 @@ public class Client : MonoBehaviour
 		string prefsStr = "I want ";
 		currentPrefs = new ClientPrefs();
 
-		float rand = Random.Range(0f, 1f);
-		if (rand <= 0.33f)
+		if (prefs.strength != Strength.None)
 		{
 			switch (prefs.strength)
 			{
@@ -145,13 +146,13 @@ public class Client : MonoBehaviour
 					break;
 			}
 		}
-		else if (rand >= 0.33f && rand <= 0.66f)
+		else if (prefs.group != FlavourGroup.None)
 		{
 			string groupStr = prefs.group.ToString();
 			prefsStr += "a " + groupStr.ToLower() + " hookah";
 			currentPrefs.group = prefs.group;
 		}	
-		else if (rand >= 0.66f)
+		else if (prefs.taste != Taste.None)
 		{
 			string tasteStr = prefs.taste.ToString();
 			prefsStr += "a " + tasteStr.ToLower() + " taste";
@@ -200,14 +201,14 @@ public class Client : MonoBehaviour
 	void Sit()
 	{
 		status = ClientStatus.Waiting;
-		DisplayText(4f);
+		DisplayText(GetPrefs(), 4f);
 	}
 
-	void DisplayText(float displayLength)
+	void DisplayText(string text, float displayLength)
 	{
 		bubble.gameObject.SetActive(true);
 
-		bubble.Display(displayLength, GetPrefs());
+		bubble.Display(displayLength, text);
 	}
 
 	void CommentOnLounge()
