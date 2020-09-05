@@ -29,9 +29,7 @@ public class Door : MonoBehaviour
 	private void ChangeState(bool open)
 	{
 		currentlyOpen = open;
-		leftDoorAnimator.speed = PlayTimer.Instance.playSpeed;
 		leftDoorAnimator.SetBool("Open", open);
-		rightDoorAnimator.speed = PlayTimer.Instance.playSpeed;
 		rightDoorAnimator.SetBool("Open", open);
 	}
 }

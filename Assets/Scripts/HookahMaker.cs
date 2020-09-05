@@ -189,11 +189,6 @@ public class HookahMaker : MonoBehaviour
 		currentAction = null;
 	}
 
-	public void UpdateSpeed(float playSpeed)
-	{
-		agent.speed *= playSpeed;
-	}
-
 	bool AgentNotMoving()
 	{
 		Vector3 pos = agent.transform.position;

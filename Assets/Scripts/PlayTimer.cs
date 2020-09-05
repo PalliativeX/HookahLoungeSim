@@ -5,11 +5,15 @@ public class PlayTimer : MonoBehaviour
 {
 	public static PlayTimer Instance { get; private set; }
 
-	public float playSpeed;
 	public int startingYear, startingMonth, startingDay;
 	public int startingHours;
 
-	public bool SpeedChanged { get; set; }
+	public float maxTimeScale = 8f;
+	public float minTimeScale = 0.125f;
+
+	float timeScale;
+
+
 
 	DateTime playTime; // NOTE: By default 1 realtime second == 1 ingame minute
 
@@ -29,29 +33,37 @@ public class PlayTimer : MonoBehaviour
     {
 		playTime = new DateTime(startingYear, startingMonth, startingDay, 
 							    startingHours, 0, 0);
-		playSpeed = 1f;
+
+		timeScale = Time.timeScale;
 	}
 
-    void Update()
+	void Update()
     {
-		if (Input.GetKeyDown(KeyCode.PageUp))
-		{
-			playSpeed *= 2f;
-			SpeedChanged = true;
-		}
-		else if (Input.GetKeyDown(KeyCode.PageDown))
-		{
-			playSpeed /= 2f;
-			SpeedChanged = true;
-		}
-
 		// NOTE: We convert 1 realtime second to 1 ingame minute
-		playTime = playTime.AddMinutes(Time.deltaTime * playSpeed);
+		playTime = playTime.AddMinutes(Time.deltaTime);
 	}
 
 	public DateTime GetTime()
 	{
 		return playTime;
+	}
+
+	public void SwitchGamePaused(bool paused)
+	{
+		Time.timeScale = paused ? 0 : timeScale;
+	}
+
+	public void ChangeTimeScale(bool increase)
+	{
+		Time.timeScale = increase ? Time.timeScale * 2 : Time.timeScale / 2;
+		if (Time.timeScale >= maxTimeScale)
+		{
+			Time.timeScale = maxTimeScale;
+		}
+		else if (Time.timeScale <= minTimeScale)
+		{
+			Time.timeScale = minTimeScale;
+		}
 	}
 
 	// NOTE: The format of output is as follows: 06:16 Monday 2015
@@ -62,7 +74,7 @@ public class PlayTimer : MonoBehaviour
 
 	public float TimePerFrame()
 	{
-		return (Time.deltaTime * playSpeed);
+		return (Time.deltaTime);
 	}
 
 	public WorkStatus GetStatus(WorkingHours workingHours)
@@ -75,5 +87,10 @@ public class PlayTimer : MonoBehaviour
 		{
 			return WorkStatus.Closed;
 		}
+	}
+
+	public float GameSpeed
+	{
+		get { return Time.timeScale; }
 	}
 }

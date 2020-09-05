@@ -35,17 +35,6 @@ public class Player : MonoBehaviour
 	private void Update()
 	{
 		WorkStatus = PlayTimer.Instance.GetStatus(workingHours);
-
-		if (PlayTimer.Instance.SpeedChanged)
-		{
-			clients.ForEach(client => client.UpdateSpeed(PlayTimer.Instance.playSpeed));
-			foreach (HookahMaker hookahMaker in workers)
-			{
-				hookahMaker.UpdateSpeed(PlayTimer.Instance.playSpeed);
-			}
-
-			PlayTimer.Instance.SpeedChanged = false;
-		}
 	}
 
 	public bool HasFreeTables()

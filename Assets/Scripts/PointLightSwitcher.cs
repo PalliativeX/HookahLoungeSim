@@ -8,18 +8,25 @@ public class PointLightSwitcher : MonoBehaviour
 
     DateTime currentTime;
 
-    void Update()
+	void Update()
     {
         currentTime = PlayTimer.Instance.GetTime();
         float hours = currentTime.Hour;
-        if (hours >= workingHours.beginning || hours <= workingHours.ending &&
-            !pointLight.enabled)
+        if (hours >= workingHours.beginning || hours <= workingHours.ending)
         {
-            pointLight.enabled = true;
-        }
+			if (!pointLight.enabled)
+			{
+				pointLight.enabled = true;
+			}
+		}
         else
         {
-            pointLight.enabled = false;
-        }
+			if (pointLight.enabled)
+			{
+				pointLight.enabled = false;
+			}
+		}
     }
+
+
 }

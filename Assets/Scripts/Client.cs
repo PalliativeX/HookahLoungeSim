@@ -227,12 +227,6 @@ public class Client : MonoBehaviour
 		player.Rating += Rating;
 	}
 
-	// NOTE: This can get messy with huge speed, prob increase it by lower rates
-	public void UpdateSpeed(float playSpeed)
-	{
-		agent.speed *= playSpeed;
-	}
-
 	bool NotMoving()
 	{
 		Vector3 agentPos = agent.transform.position;
