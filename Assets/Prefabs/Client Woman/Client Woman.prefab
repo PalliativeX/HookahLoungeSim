@@ -590,7 +590,6 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1205,7 +1204,6 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1355,7 +1353,6 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1502,7 +1499,6 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1693,7 +1689,6 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1777,7 +1772,6 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1898,7 +1892,6 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -2296,7 +2289,6 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -2759,7 +2751,6 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -2917,7 +2908,6 @@ SkinnedMeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -3153,15 +3143,25 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4203470457943290}
     m_Modifications:
+    - target: {fileID: 3786412785598870175, guid: a50a51eb722767440b6a86ea5e707ab9,
+        type: 3}
+      propertyPath: m_Name
+      value: Chat Bubble
+      objectReference: {fileID: 0}
+    - target: {fileID: 3786412785598870175, guid: a50a51eb722767440b6a86ea5e707ab9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3786412785598870168, guid: a50a51eb722767440b6a86ea5e707ab9,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.047
+      value: -0.122
       objectReference: {fileID: 0}
     - target: {fileID: 3786412785598870168, guid: a50a51eb722767440b6a86ea5e707ab9,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.29
+      value: 1.283
       objectReference: {fileID: 0}
     - target: {fileID: 3786412785598870168, guid: a50a51eb722767440b6a86ea5e707ab9,
         type: 3}
@@ -3223,20 +3223,15 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0.02
       objectReference: {fileID: 0}
-    - target: {fileID: 3786412785598870175, guid: a50a51eb722767440b6a86ea5e707ab9,
+    - target: {fileID: 3786412787245029037, guid: a50a51eb722767440b6a86ea5e707ab9,
         type: 3}
-      propertyPath: m_Name
-      value: Chat Bubble
-      objectReference: {fileID: 0}
-    - target: {fileID: 3786412785598870175, guid: a50a51eb722767440b6a86ea5e707ab9,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
+      propertyPath: m_Mesh
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 3786412787245029027, guid: a50a51eb722767440b6a86ea5e707ab9,
         type: 3}
       propertyPath: m_textInfo.characterCount
-      value: 11
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 3786412787245029027, guid: a50a51eb722767440b6a86ea5e707ab9,
         type: 3}
@@ -3258,10 +3253,10 @@ PrefabInstance:
       propertyPath: m_textInfo.pageCount
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 3786412787245029037, guid: a50a51eb722767440b6a86ea5e707ab9,
+    - target: {fileID: 3786412787245029027, guid: a50a51eb722767440b6a86ea5e707ab9,
         type: 3}
-      propertyPath: m_Mesh
-      value: 
+      propertyPath: m_text
+      value: Sample textw
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a50a51eb722767440b6a86ea5e707ab9, type: 3}

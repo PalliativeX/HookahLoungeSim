@@ -6,17 +6,17 @@ public class AudioManager : MonoBehaviour
 	public float sfxVolumePercent;
 	public float musicVolumePercent;
 
-	public static AudioManager instance;
+	public static AudioManager Instance;
 
 	AudioSource musicSource;
 	AudioSource sfx2DSource;
 
 	private void Awake()
 	{
-		if (instance != null)
+		if (Instance != null)
 			Destroy(gameObject);
 
-		instance = this;
+		Instance = this;
 
 		musicSource = new AudioSource();
 		GameObject newMusicSource = new GameObject("Music source 1");

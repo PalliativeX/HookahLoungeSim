@@ -1,23 +1,24 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class SettingsManager : MonoBehaviour
 {
 	public Slider masterSlider, musicSlider, sfxSlider;
 	public Toggle fullscreenToggle;
-	public TMPro.TMP_Dropdown resolutionDropdown;
-	public TMPro.TMP_Dropdown qualityDropdown;
+	public TMP_Dropdown resolutionDropdown;
+	public TMP_Dropdown qualityDropdown;
 
 	Resolution[] resolutions;
 
 	void Start()
     {
-		if (AudioManager.instance != null)
+		if (AudioManager.Instance != null)
 		{
-			masterSlider.value = AudioManager.instance.MasterVolumePercent;
-			musicSlider.value = AudioManager.instance.MusicVolumePercent;
-			sfxSlider.value = AudioManager.instance.SFXVolumePercent;
+			masterSlider.value = AudioManager.Instance.MasterVolumePercent;
+			musicSlider.value = AudioManager.Instance.MusicVolumePercent;
+			sfxSlider.value = AudioManager.Instance.SFXVolumePercent;
 		}
 
 		resolutions = Screen.resolutions;
@@ -86,17 +87,17 @@ public class SettingsManager : MonoBehaviour
 
 	public void SetMasterVolume(float newVolume)
 	{
-		AudioManager.instance.MasterVolumePercent = newVolume;
+		AudioManager.Instance.MasterVolumePercent = newVolume;
 	}
 
 	public void SetMusicVolume(float newVolume)
 	{
-		AudioManager.instance.MusicVolumePercent = newVolume;
+		AudioManager.Instance.MusicVolumePercent = newVolume;
 	}
 
 	public void SetSFXVolume(float newVolume)
 	{
-		AudioManager.instance.SFXVolumePercent = newVolume;
+		AudioManager.Instance.SFXVolumePercent = newVolume;
 	}
 
 	public void SavePlayerPrefs()
@@ -104,11 +105,11 @@ public class SettingsManager : MonoBehaviour
 		PlayerPrefs.SetInt("quality", qualityDropdown.value);
 		PlayerPrefs.SetInt("fullscreen", fullscreenToggle.isOn ? 1 : 0);
 		PlayerPrefs.SetInt("resolution", resolutionDropdown.value);
-		if (AudioManager.instance != null)
+		if (AudioManager.Instance != null)
 		{
-			PlayerPrefs.SetFloat("master", AudioManager.instance.masterVolumePercent);
-			PlayerPrefs.SetFloat("music", AudioManager.instance.musicVolumePercent);
-			PlayerPrefs.SetFloat("sfx", AudioManager.instance.sfxVolumePercent);
+			PlayerPrefs.SetFloat("master", AudioManager.Instance.masterVolumePercent);
+			PlayerPrefs.SetFloat("music", AudioManager.Instance.musicVolumePercent);
+			PlayerPrefs.SetFloat("sfx", AudioManager.Instance.sfxVolumePercent);
 		}
 
 		PlayerPrefs.Save();

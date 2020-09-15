@@ -12,9 +12,9 @@ public class MenuMusicManager : MonoBehaviour
 	{
 		if (musicOn && menuTheme != null)
 		{
-			if (AudioManager.instance != null)
+			if (AudioManager.Instance != null)
 			{
-				AudioManager.instance.PlayMusic(menuTheme);
+				AudioManager.Instance.PlayMusic(menuTheme);
 			}
 		}
 	}

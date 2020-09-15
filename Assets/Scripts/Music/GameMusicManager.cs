@@ -12,7 +12,7 @@ public class GameMusicManager : MonoBehaviour
 
 	void Update()
 	{
-		if (!musicOn || AudioManager.instance == null || loungeMusic.Length == 0)
+		if (!musicOn || AudioManager.Instance == null || loungeMusic.Length == 0)
 			return;
 
 		if (!currentlyPlaying)
@@ -25,7 +25,7 @@ public class GameMusicManager : MonoBehaviour
 	IEnumerator PlayMusic(AudioClip clip)
 	{
 		currentlyPlaying = true;
-		AudioManager.instance.PlayMusic(clip);
+		AudioManager.Instance.PlayMusic(clip);
 
 		yield return new WaitForSeconds(clip.length);
 

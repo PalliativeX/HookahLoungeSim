@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
+using TMPro;
 
 public class PlayerGUI : MonoBehaviour
 {
 	const int maxRatingLength = 3;
 
-	public TMPro.TMP_Text ratingText, moneyText, timeText;
-	public TMPro.TMP_Text statusSignText;
+	public TransparentObjectsController transparentObjectsController;
+
+	public TMP_Text ratingText, moneyText, timeText;
+	public TMP_Text statusSignText;
 
 	Player player;
 

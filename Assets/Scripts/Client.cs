@@ -1,5 +1,7 @@
-﻿using UnityEngine;
+﻿using System.IO;
+using UnityEngine;
 using UnityEngine.AI;
+using System.Runtime.Serialization.Formatters.Binary;
 
 public enum ClientStatus
 {
@@ -11,38 +13,6 @@ public enum ClientStatus
 }
 
 [System.Serializable]
-public struct ClientPrefs
-{
-	public FlavourGroup group;
-	public Taste taste;
-	public Strength strength;
-
-	public ClientPrefs(FlavourGroup group = FlavourGroup.None, Taste taste = Taste.None, Strength strength = Strength.None)
-	{
-		this.group = group;
-		this.taste = taste;
-		this.strength = strength;
-	}
-
-	public bool SatisfiesPrefs(Tobacco tobacco)
-	{
-		if (group != FlavourGroup.None && group != tobacco.flavour.group)
-		{
-			return false;
-		}
-		if (taste != Taste.None && taste != tobacco.flavour.taste)
-		{
-			return false;
-		}
-		if (strength != Strength.None && strength != tobacco.brand.strength)
-		{
-			return false;
-		}
-
-		return true;
-	}
-}
-
 public class Client : MonoBehaviour
 {
 	public ChatBubble bubble;
@@ -50,10 +20,9 @@ public class Client : MonoBehaviour
 	public ClientPrefs prefs;
 	public string[] onHookahBrought;
 
-	Player player;
+	public ClientStatus Status { get; set; }
 
-	ClientStatus status;
-	HookahMaker worker;
+	Player player;
 	Table occupiedTable;
 	Hookah smokedHookah;
 	ClientPrefs currentPrefs;
@@ -71,31 +40,31 @@ public class Client : MonoBehaviour
 
 	void Update()
 	{
-		if (status == ClientStatus.Entered && NotMoving())
+		if (Status == ClientStatus.Entered && NotMoving())
 		{
 			LookForFreeTable();
 		}
 
-		if (status == ClientStatus.Approaching && NotMoving())
+		if (Status == ClientStatus.Approaching && NotMoving())
 		{
 			Sit();
 		}
 
-		if (status == ClientStatus.Waiting)
+		if (Status == ClientStatus.Waiting)
 		{
 			waitingTime += PlayTimer.Instance.TimePerFrame();
 
 			if (occupiedTable.Hookah != null)
 			{
 				smokedHookah = occupiedTable.Hookah;
-				status = ClientStatus.Smoking;
+				Status = ClientStatus.Smoking;
 				smokedHookah.SetActive();
 				prefsSatisfied = PrefsSatisfied();
 				DisplayText(prefsSatisfied ? onHookahBrought[0] : onHookahBrought[1], 3f);
 			}
 		}
 
-		if (status == ClientStatus.Smoking)
+		if (Status == ClientStatus.Smoking)
 		{
 			if (smokedHookah.Active)
 			{
@@ -103,12 +72,12 @@ public class Client : MonoBehaviour
 			}
 			else
 			{
-				status = ClientStatus.Leaving;
+				Status = ClientStatus.Leaving;
 				agent.SetDestination(player.entry.position);
 			}
 		}
 
-		if (status == ClientStatus.Leaving && NotMoving())
+		if (Status == ClientStatus.Leaving && NotMoving())
 		{
 			player.RemoveClient(this);
 			if (waitingTime > 0f)
@@ -169,7 +138,7 @@ public class Client : MonoBehaviour
 
 	void Enter()
 	{
-		status = ClientStatus.Entered;
+		Status = ClientStatus.Entered;
 		//Vector3 advance = new Vector3(0.3f, 0, 0);
 		//agent.SetDestination(agent.transform.position + advance);
 	}
@@ -184,11 +153,11 @@ public class Client : MonoBehaviour
 
 			Vector3 destToTable = Utils.ClosestPointOnSphere(transform.position, occupiedTable.approachPlace.position, 3 * 0.96f);
 			agent.SetDestination(destToTable);
-			status = ClientStatus.Approaching;
+			Status = ClientStatus.Approaching;
 		}
 		else
 		{
-			status = ClientStatus.Leaving;
+			Status = ClientStatus.Leaving;
 			agent.SetDestination(player.entry.position);
 		}
 	}
@@ -200,7 +169,7 @@ public class Client : MonoBehaviour
 
 	void Sit()
 	{
-		status = ClientStatus.Waiting;
+		Status = ClientStatus.Waiting;
 		DisplayText(GetPrefs(), 4f);
 	}
 
@@ -242,12 +211,24 @@ public class Client : MonoBehaviour
 		return false;
 	}
 
-	public ClientStatus Status
+
+	/*
+	 * These must also be serialized!!!
+	    Table occupiedTable;
+		Hookah smokedHookah;
+		ClientPrefs currentPrefs;
+	 */
+
+	public void Save(BinaryFormatter formatter, FileStream stream)
 	{
-		get { return status; }
-		set {
-			status = value;
-		}
+		ClientData data = new ClientData(transform, this);
+
+		formatter.Serialize(stream, data);
+	}
+
+	public void Load(BinaryFormatter formatter, FileStream stream)
+	{
+		ClientData data = (ClientData)formatter.Deserialize(stream);
 	}
 
 }

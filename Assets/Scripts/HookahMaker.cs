@@ -1,9 +1,14 @@
-﻿using UnityEngine;
+﻿using System.IO;
+using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
 
 public class HookahMaker : MonoBehaviour
 {
+	public new string name;
+	public int cost;
+	public Sprite icon;
+
 	public NavMeshAgent agent;
 	public GameObject selectionCircle;
 	public Transform hookahCarryPos;
@@ -21,7 +26,7 @@ public class HookahMaker : MonoBehaviour
 	Queue<Action> actions;
 	Action currentAction;
 
-	void Start()
+	void Awake()
 	{
 		actions = new Queue<Action>();
 	}
@@ -202,6 +207,16 @@ public class HookahMaker : MonoBehaviour
 		}
 
 		return false;
+	}
+
+	public void Save(BinaryWriter writer)
+	{
+
+	}
+
+	public void Load(BinaryReader reader)
+	{
+
 	}
 
 	public bool Selected

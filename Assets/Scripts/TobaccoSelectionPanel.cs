@@ -4,8 +4,8 @@ using TMPro;
 public class TobaccoSelectionPanel : MonoBehaviour
 {
     public TMP_Dropdown dropdown;
-    public TMPro.TMP_Text label;
-    public TMPro.TMP_Text description;
+    public TMP_Text label;
+    public TMP_Text description;
     Player player;
 
     int currentValue;

@@ -1,22 +1,21 @@
 ﻿using UnityEngine;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
-
-
+using System.Runtime.Serialization.Formatters.Binary;
 
 public class Player : MonoBehaviour
 {
-	public float startingMoney = 1000f;
+	public float startingMoney;
 	public WorkingHours workingHours;
+	public Transform entry;
 
 	public Table[] tables;
 	public Hookah[] hookahs;
-	public HookahMaker[] workers;
+	public List<HookahMaker> workers;
 	public Tobacco[] tobaccos;
 
 	List<Client> clients;
-
-	public Transform entry;
 
 	PlayerGUI playerGUI;
 	float money;
@@ -85,6 +84,51 @@ public class Player : MonoBehaviour
 	public void RemoveClient(Client client)
 	{
 		clients.Remove(client);
+	}
+
+	public void AddWorker(HookahMaker newWorker)
+	{
+		workers.Add(newWorker);
+	}
+
+	public void RemoveWorker(HookahMaker newWorker)
+	{
+		workers.Remove(newWorker);
+	}
+
+	public void Save(BinaryFormatter formatter, FileStream stream)
+	{
+		formatter.Serialize(stream, money);
+		formatter.Serialize(stream, rating);
+		formatter.Serialize(stream, commentCount);
+
+		formatter.Serialize(stream, clients.Count);
+		foreach (Client client in clients)
+		{
+			client.Save(formatter, stream);
+		}
+	}
+
+	public void Load(BinaryFormatter formatter, FileStream stream)
+	{
+		money = (float)formatter.Deserialize(stream);
+		rating = (float)formatter.Deserialize(stream);
+		commentCount = (int)formatter.Deserialize(stream);
+
+		// NOTE: Loading clients
+		foreach (Client client in clients)
+		{
+			Destroy(client.gameObject);
+		}
+		clients.Clear();
+		int clientsCount = (int)formatter.Deserialize(stream);
+		ClientGenerator generator = FindObjectOfType<ClientGenerator>();
+		for (int i = 0; i < clientsCount; i++)
+		{
+			Client client = generator.GenerateClient();
+			ClientData data = (ClientData)formatter.Deserialize(stream);
+			SerializedTransformExtention.DeserializeTransform(data.serializedTransform, client.transform);
+		}
 	}
 
 	public float Money

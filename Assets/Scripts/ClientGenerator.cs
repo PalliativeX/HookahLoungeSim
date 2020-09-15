@@ -26,8 +26,6 @@ public class ClientGenerator : MonoBehaviour
 
 		yield return StartCoroutine(Wait());
 
-		yield return StartCoroutine(door.Open());
-
 		GenerateClient();
 
 		waiting = false;
@@ -53,11 +51,13 @@ public class ClientGenerator : MonoBehaviour
 		return popularitySpawnIncrease;
 	}
 
-	void GenerateClient()
+	public Client GenerateClient()
 	{
 		Client newClient = Instantiate(clientPrefabs[Random.Range(0, clientPrefabs.Length)]);
 		newClient.transform.position = spawnPlace.position;
 		player.AddClient(newClient);
+
+		return newClient;
 	}
 
 }

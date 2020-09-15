@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using UnityEngine;
+using System.Runtime.Serialization.Formatters.Binary;
 
 public class PlayTimer : MonoBehaviour
 {
@@ -12,9 +14,6 @@ public class PlayTimer : MonoBehaviour
 	public float minTimeScale = 0.125f;
 
 	float timeScale;
-
-
-
 	DateTime playTime; // NOTE: By default 1 realtime second == 1 ingame minute
 
 	void Awake()
@@ -56,14 +55,8 @@ public class PlayTimer : MonoBehaviour
 	public void ChangeTimeScale(bool increase)
 	{
 		Time.timeScale = increase ? Time.timeScale * 2 : Time.timeScale / 2;
-		if (Time.timeScale >= maxTimeScale)
-		{
-			Time.timeScale = maxTimeScale;
-		}
-		else if (Time.timeScale <= minTimeScale)
-		{
-			Time.timeScale = minTimeScale;
-		}
+		Time.timeScale = Mathf.Clamp(Time.timeScale, minTimeScale, maxTimeScale);
+		timeScale = Time.timeScale;
 	}
 
 	// NOTE: The format of output is as follows: 06:16 Monday 2015
@@ -87,6 +80,21 @@ public class PlayTimer : MonoBehaviour
 		{
 			return WorkStatus.Closed;
 		}
+	}
+
+	public void Save(BinaryFormatter formatter, FileStream stream)
+	{
+		formatter.Serialize(stream, timeScale);
+		formatter.Serialize(stream, playTime);
+	}
+
+	public void Load(BinaryFormatter formatter, FileStream stream)
+	{
+		timeScale = (float)formatter.Deserialize(stream);
+		playTime = (DateTime)formatter.Deserialize(stream);
+
+		//timeScale = reader.ReadSingle();
+		//playTime = new DateTime(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32());
 	}
 
 	public float GameSpeed

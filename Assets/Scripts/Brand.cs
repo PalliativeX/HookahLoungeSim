@@ -21,6 +21,7 @@ public class Brand
 	public HeatTolerance heatTolerance;
 	public float smokingTime;
 	public float price;
+	Flavour[] flavours;
 
 	public Brand(string name, Strength strength, HeatTolerance heatTolerance, float smokingTime, float price)
 	{

@@ -1,6 +1,4 @@
-﻿
-
-[System.Serializable]
+﻿[System.Serializable]
 public class Tobacco
 {
 	public Brand brand;

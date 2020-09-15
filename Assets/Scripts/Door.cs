@@ -1,4 +1,6 @@
 ﻿using System.Collections;
+using System;
+using System.IO;
 using UnityEngine;
 
 public class Door : MonoBehaviour
@@ -6,18 +8,36 @@ public class Door : MonoBehaviour
 	public Animator leftDoorAnimator;
 	public Animator rightDoorAnimator;
 
-	public bool currentlyOpen;
+	public bool CurrentlyOpen { get; set; }
 
-	public IEnumerator Open()
+	private Player player;
+
+	WorkingHours workingHours;
+
+	private void Start()
 	{
-		float timeToOpen = 2f;
+		player = FindObjectOfType<Player>();
+		workingHours = player.workingHours;
+		CurrentlyOpen = false;
+	}
 
-		while (timeToOpen > 0f)
+	void Update()
+	{
+		DateTime time = PlayTimer.Instance.GetTime();
+		float hours = time.Hour;
+		// NOTE: If open
+		if (hours >= workingHours.beginning && hours <= workingHours.ending)
 		{
-			timeToOpen -= PlayTimer.Instance.TimePerFrame();
-			yield return null;
+			if (!CurrentlyOpen) Open();
 		}
+		else
+		{
+			if (CurrentlyOpen) Close();
+		}
+	}
 
+	public void Open()
+	{
 		ChangeState(open: true);
 	}
 
@@ -28,8 +48,19 @@ public class Door : MonoBehaviour
 
 	private void ChangeState(bool open)
 	{
-		currentlyOpen = open;
+		CurrentlyOpen = open;
 		leftDoorAnimator.SetBool("Open", open);
 		rightDoorAnimator.SetBool("Open", open);
+	}
+
+	public void Save(BinaryWriter writer)
+	{
+		writer.Write(CurrentlyOpen);
+	}
+
+	public void Load(BinaryReader reader)
+	{
+		CurrentlyOpen = reader.ReadBoolean();
+		ChangeState(open: CurrentlyOpen);
 	}
 }
