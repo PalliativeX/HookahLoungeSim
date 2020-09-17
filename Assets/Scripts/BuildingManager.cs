@@ -1,20 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-[System.Serializable]
-public struct FurnitureItem
-{
-	public GameObject prefab;
-	public Sprite icon;
-}
+﻿using UnityEngine;
 
 public class BuildingManager : MonoBehaviour
 {
 	public Vector3 loungeStart;
 	public float loungeWidth, loungeLength;
 
-	public FurnitureItem[] items;
+	public InteriorItem[] items;
 
 	GameObject currentBuilding;
 	int currentIndex;
@@ -42,6 +33,15 @@ public class BuildingManager : MonoBehaviour
 		}
 	}
 
+	public void SelectBuilding(string prefabName)
+	{
+		for (int i = 0; i < items.Length; i++)
+		{
+			if (items[i].prefabName == prefabName)
+				SelectBuilding(i);
+		}
+	}
+
 	public void SelectBuilding(int index)
 	{
 		currentIndex = index;
@@ -55,7 +55,7 @@ public class BuildingManager : MonoBehaviour
 
 	void CreateBuildingHologram()
 	{
-		GameObject building = Instantiate(items[currentIndex].prefab, transform);
+		GameObject building = Instantiate(items[currentIndex].gameObject, transform);
 		UpdateColor(building);
 		currentBuilding = building;
 	}

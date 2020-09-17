@@ -11,25 +11,31 @@ public class TransparentObjectsController : MonoBehaviour
 
 	public KeyCode changeMat = KeyCode.T;
 
-	bool currentlyTransparent = true;
+	bool currentlyTransparent;
 
 	private void Start()
 	{
-		ChangeTransparency();
+		currentlyTransparent = true;
+		ChangeTransparency(currentlyTransparent);
 	}
 
 	private void Update()
 	{
 		if (Input.GetKeyDown(changeMat))
 		{
-			ChangeTransparency();
+			ChangeTransparency(!currentlyTransparent);
 		}
 	}
 
-	public void ChangeTransparency()
+	public void ToggleTransparentcy()
 	{
-		currentlyTransparent = !currentlyTransparent;
-		if (currentlyTransparent)
+		ChangeTransparency(!currentlyTransparent);
+	}
+
+	public void ChangeTransparency(bool transparent)
+	{
+		currentlyTransparent = transparent;
+		if (!transparent)
 		{
 			ChangeMat(opaqueWallMat);
 			TurnColliders(collidersOn: true);
@@ -69,6 +75,7 @@ public class TransparentObjectsController : MonoBehaviour
 	public void Load(BinaryFormatter formatter, FileStream stream)
 	{
 		currentlyTransparent = (bool)formatter.Deserialize(stream);
+		ChangeTransparency(currentlyTransparent);
 	}
 
 }

@@ -7,12 +7,14 @@ public class SaveLoadManager : MonoBehaviour
 	Player player;
 	Door door;
 	TransparentObjectsController transparentObjController;
+	GameMenuManager menuManager;
 
 	private void Start()
 	{
 		player = FindObjectOfType<Player>();
 		transparentObjController = FindObjectOfType<TransparentObjectsController>();
 		door = FindObjectOfType<Door>();
+		menuManager = FindObjectOfType<GameMenuManager>();
 
 		string loadPath = PlayerPrefs.GetString("load path");
 		if (loadPath != null && loadPath != "")
@@ -21,6 +23,7 @@ public class SaveLoadManager : MonoBehaviour
 		}
 	}
 
+	// TODO: SAVE AND LOAD DOOR!!
 	public void Save(string path)
 	{
 		BinaryFormatter formatter = new BinaryFormatter();
@@ -31,14 +34,6 @@ public class SaveLoadManager : MonoBehaviour
 		transparentObjController.Save(formatter, stream);
 
 		stream.Close();
-
-		/*using (BinaryFormatter formatter = new BinaryFormatter(File.Open(path, FileMode.Create)))
-		//{
-			PlayTimer.Instance.Save(writer);
-			player.Save(writer);
-			transparentObjController.Save(writer);
-			door.Save(writer);
-		//}*/
 	}
 
 	public void Load(string path)
@@ -47,17 +42,11 @@ public class SaveLoadManager : MonoBehaviour
 		FileStream stream = new FileStream(path, FileMode.Open);
 
 		PlayTimer.Instance.Load(formatter, stream);
+		menuManager.SwitchGamePause(PlayTimer.Instance.IsPaused);
 		player.Load(formatter, stream);
 		transparentObjController.Load(formatter, stream);
 
 		stream.Close();
 
-		/*using (BinaryReader reader = new BinaryReader(File.OpenRead(path)))
-		{
-			PlayTimer.Instance.Load(reader);
-			player.Load(reader);
-			transparentObjController.Load(reader);
-			door.Load(reader);
-		}*/
 	}
 }

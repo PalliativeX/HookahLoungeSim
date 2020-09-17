@@ -81,7 +81,7 @@ public class GameMenuManager : MonoBehaviour
 
 	public void ChangeObjectsTransparency()
 	{
-		transparentObjectsController.ChangeTransparency();
+		transparentObjectsController.ToggleTransparentcy();
 	}
 
 	void ChangeGameSpeedText()

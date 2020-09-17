@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &2859799588732985678
+--- !u!1 &520625141695477286
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,45 +8,45 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7307762612867621586}
-  - component: {fileID: 3573694677378772731}
-  - component: {fileID: 8565055095180948645}
+  - component: {fileID: 8245237156145933050}
+  - component: {fileID: 2665429776083971463}
+  - component: {fileID: 5449556649955504682}
   m_Layer: 0
-  m_Name: loungeChair
+  m_Name: tableRound
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7307762612867621586
+--- !u!4 &8245237156145933050
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2859799588732985678}
+  m_GameObject: {fileID: 520625141695477286}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.166, y: 0, z: -0}
+  m_LocalPosition: {x: -0, y: 0.272, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 8304757691045779726}
+  m_Father: {fileID: 8773365490861667238}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &3573694677378772731
+--- !u!33 &2665429776083971463
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2859799588732985678}
-  m_Mesh: {fileID: 7528303767759117007, guid: bbf77b8787b11504abc8aaf19e9ac38e, type: 3}
---- !u!23 &8565055095180948645
+  m_GameObject: {fileID: 520625141695477286}
+  m_Mesh: {fileID: -3934213320317591313, guid: f8dd4eff8e8fadc4f885fc2dfa5e9a7c, type: 3}
+--- !u!23 &5449556649955504682
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2859799588732985678}
+  m_GameObject: {fileID: 520625141695477286}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -57,8 +57,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 7887957717227282328, guid: bbf77b8787b11504abc8aaf19e9ac38e, type: 3}
-  - {fileID: -8067726398312463513, guid: bbf77b8787b11504abc8aaf19e9ac38e, type: 3}
+  - {fileID: -8067726398312463513, guid: f8dd4eff8e8fadc4f885fc2dfa5e9a7c, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -79,7 +78,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!1 &4979631840008399645
+--- !u!1 &5735924248877990325
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -87,42 +86,40 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8304757691045779726}
-  - component: {fileID: 2222275210099598655}
+  - component: {fileID: 8773365490861667238}
+  - component: {fileID: 6658732802956390987}
   m_Layer: 0
-  m_Name: Chair
+  m_Name: Round Table
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8304757691045779726
+--- !u!4 &8773365490861667238
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4979631840008399645}
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -0.56355095, y: 0.00000011920929, z: -1.4239208}
+  m_GameObject: {fileID: 5735924248877990325}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2.78, z: 0}
   m_LocalScale: {x: 10, y: 10, z: 10}
   m_Children:
-  - {fileID: 7307762612867621586}
+  - {fileID: 8245237156145933050}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
---- !u!114 &2222275210099598655
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6658732802956390987
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4979631840008399645}
+  m_GameObject: {fileID: 5735924248877990325}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62b3538db3eb6634f863e53e0ea99c89, type: 3}
+  m_Script: {fileID: 11500000, guid: 0a855ed7a723ac64fa4463b1065c88bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sofaPos: {fileID: 0}
-  hookahPlace: {fileID: 0}
-  approachPlace: {fileID: 0}
+  prefabName: Round Table

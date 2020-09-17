@@ -10,13 +10,15 @@ public class Player : MonoBehaviour
 	public WorkingHours workingHours;
 	public Transform entry;
 
-	public Table[] tables;
-	public Hookah[] hookahs;
+	public List<InteriorItem> interiorItems;
+	public List<Table> tables;
+	public List<Hookah> hookahs;
 	public List<HookahMaker> workers;
-	public Tobacco[] tobaccos;
+	public List<Tobacco> tobaccos;
+	[HideInInspector]
+	public List<Client> clients;
 
-	List<Client> clients;
-
+	PlayerDataLoader dataLoader;
 	PlayerGUI playerGUI;
 	float money;
 	float rating;
@@ -29,6 +31,7 @@ public class Player : MonoBehaviour
 		clients = new List<Client>();
 		workStatus = WorkStatus.Open;
 		money = startingMoney;
+		dataLoader = FindObjectOfType<PlayerDataLoader>();
 	}
 
 	private void Update()
@@ -61,21 +64,6 @@ public class Player : MonoBehaviour
 		return tobaccos.Any(tobacco => specifiedFlavour == tobacco.flavour);
 	}
 
-	public Flavour GetRandomFlavour()
-	{
-		return tobaccos[Random.Range(0, tobaccos.Length - 1)].flavour;
-	}
-
-	public Tobacco GetRandomTobacco()
-	{
-		return tobaccos[Random.Range(0, tobaccos.Length - 1)];
-	}
-
-	public Tobacco[] GetTobaccos()
-	{
-		return tobaccos;
-	}
-
 	public void AddClient(Client newClient)
 	{
 		clients.Add(newClient);
@@ -102,11 +90,7 @@ public class Player : MonoBehaviour
 		formatter.Serialize(stream, rating);
 		formatter.Serialize(stream, commentCount);
 
-		formatter.Serialize(stream, clients.Count);
-		foreach (Client client in clients)
-		{
-			client.Save(formatter, stream);
-		}
+		dataLoader.Save(formatter, stream);
 	}
 
 	public void Load(BinaryFormatter formatter, FileStream stream)
@@ -115,20 +99,7 @@ public class Player : MonoBehaviour
 		rating = (float)formatter.Deserialize(stream);
 		commentCount = (int)formatter.Deserialize(stream);
 
-		// NOTE: Loading clients
-		foreach (Client client in clients)
-		{
-			Destroy(client.gameObject);
-		}
-		clients.Clear();
-		int clientsCount = (int)formatter.Deserialize(stream);
-		ClientGenerator generator = FindObjectOfType<ClientGenerator>();
-		for (int i = 0; i < clientsCount; i++)
-		{
-			Client client = generator.GenerateClient();
-			ClientData data = (ClientData)formatter.Deserialize(stream);
-			SerializedTransformExtention.DeserializeTransform(data.serializedTransform, client.transform);
-		}
+		dataLoader.Load(formatter, stream);
 	}
 
 	public float Money

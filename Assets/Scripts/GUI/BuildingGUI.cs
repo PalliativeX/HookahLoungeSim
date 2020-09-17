@@ -6,8 +6,9 @@ public class BuildingGUI : MonoBehaviour
 {
 	BuildingManager buildingManager;
 	public GameObject gui;
+	public RectTransform scrollviewContent;
 
-	public Image image;
+	public BuildingItemImage[] itemImages;
 
 	bool isActive;
 
@@ -16,18 +17,32 @@ public class BuildingGUI : MonoBehaviour
 		buildingManager = FindObjectOfType<BuildingManager>();
 		isActive = false;
 		gui.SetActive(false);
-
-		image.sprite = buildingManager.items[0].icon;
 	}
 
 	public void SwitchGui()
 	{
 		isActive = !isActive;
 		gui.SetActive(isActive);
+
+		if (isActive) FillScrollview();
 	}
 
 	public void SelectChair()
 	{
 		buildingManager.SelectBuilding(0);
+	}
+
+	public void FillScrollview()
+	{
+		for (int i = 0; i < scrollviewContent.childCount; i++)
+		{
+			Destroy(scrollviewContent.GetChild(i).gameObject);
+		}
+
+		for (int i = 0; i < buildingManager.items.Length; i++)
+		{
+			Image item = Instantiate(itemImages[i].GetComponent<Image>());
+			item.transform.SetParent(scrollviewContent, false);
+		}
 	}
 }

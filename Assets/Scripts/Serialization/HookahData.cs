@@ -1,10 +1,10 @@
-﻿using UnityEngine;
+﻿/*using UnityEngine;
 
 [System.Serializable]
-public class TableData
+public class HookahData
 {
 	public SerializedTransform serializedTransform;
-	public Table table;
+	public Hookah hookah table;
 
 	public TableData(Transform transform, Table table)
 	{
@@ -12,3 +12,4 @@ public class TableData
 		this.table = table;
 	}
 }
+*/

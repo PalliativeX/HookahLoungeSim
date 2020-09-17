@@ -5,6 +5,8 @@ using System.Runtime.Serialization.Formatters.Binary;
 [System.Serializable]
 public class Table : MonoBehaviour
 {
+	public string prefabName;
+
 	public bool Occupied { get; set; }
     public bool Reserved { get; set; }
 
@@ -12,9 +14,11 @@ public class Table : MonoBehaviour
 	public Transform hookahPlace;
 	public Transform approachPlace;
 
-	// TODO: How to serialize that??
 	public Hookah Hookah { get; set; }
 	public Client ClientSitting { get; set; }
+
+	[HideInInspector]
+	public TableData tableData;
 
 	public Vector3 SofaPos
 	{
@@ -26,21 +30,21 @@ public class Table : MonoBehaviour
 		get { return hookahPlace.position; }
 	}
 
-	public void Save(BinaryWriter writer)
+	public void Save(BinaryFormatter formatter, FileStream stream)
 	{
-		writer.Write(Occupied);
-		writer.Write(Reserved);
+		formatter.Serialize(stream, Occupied);
+		formatter.Serialize(stream, Reserved);
 
-		BinaryFormatter formatter = new BinaryFormatter();
-
-		TableData tableData = new TableData(transform, this);
-		formatter.Serialize(writer.BaseStream, tableData);
+		formatter.Serialize(stream, new SerializedTransform(transform));
 	}
 
-	public void Read(BinaryReader reader)
+	public void Load(BinaryFormatter formatter, FileStream stream)
 	{
-		Occupied = reader.ReadBoolean();
-		Reserved = reader.ReadBoolean();
+		Occupied = (bool)formatter.Deserialize(stream);
+		Reserved = (bool)formatter.Deserialize(stream);
+
+		SerializedTransform serializedTransform = (SerializedTransform)formatter.Deserialize(stream);
+		TransformDeserializer.Deserialize(serializedTransform, transform);
 	}
 }
 

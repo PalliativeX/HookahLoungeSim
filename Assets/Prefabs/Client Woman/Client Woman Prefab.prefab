@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 776154306063337765}
   - component: {fileID: 279046079945593581}
   m_Layer: 0
-  m_Name: Client Woman
+  m_Name: Client Woman Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -78,6 +78,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b47764715bf18444b03b6cb29b208bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prefabName: Client Woman Prefab
   bubble: {fileID: 2815810439453611397}
   agent: {fileID: -3409222057948500176}
   prefs:

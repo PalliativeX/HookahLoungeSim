@@ -937,7 +937,7 @@ GameObject:
   - component: {fileID: 8800255881640477258}
   - component: {fileID: 8800255881640477259}
   m_Layer: 8
-  m_Name: Main Hookah Maker
+  m_Name: Sasha Kamen Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1033,8 +1033,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a079637c9610784497a3cf59955cd39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: Leha Pepel
-  cost: 600
+  prefabName: Sasha Kamen Prefab
+  name: Sasha Kamen
+  cost: 500
   icon: {fileID: 21300000, guid: 8461b4e3d683aad4ca0a674e5b132fbe, type: 3}
   agent: {fileID: 8800255881640477259}
   selectionCircle: {fileID: 8800255882635735629}

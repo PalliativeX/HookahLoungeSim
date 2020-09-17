@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
+using System;
 
+[Serializable]
 public class Action
 {
 	public bool started;
 }
 
+[Serializable]
 public class MoveAction : Action
 {
 	public Vector3 dest;
@@ -15,6 +18,7 @@ public class MoveAction : Action
 	}
 }
 
+[Serializable]
 public class TakeHookahAction : Action
 {
 	public Tobacco tobacco;
@@ -25,6 +29,7 @@ public class TakeHookahAction : Action
 	}
 }
 
+[Serializable]
 public class BringHookahAction : Action
 {
 	public Table table;
@@ -35,6 +40,7 @@ public class BringHookahAction : Action
 	}
 }
 
+[Serializable]
 public class ChooseTobaccoAction : Action
 {
 	public Hookah hookah;

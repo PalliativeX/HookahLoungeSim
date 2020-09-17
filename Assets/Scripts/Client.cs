@@ -1,7 +1,7 @@
 ﻿using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using UnityEngine.AI;
-using System.Runtime.Serialization.Formatters.Binary;
 
 public enum ClientStatus
 {
@@ -15,6 +15,8 @@ public enum ClientStatus
 [System.Serializable]
 public class Client : MonoBehaviour
 {
+	public string prefabName;
+
 	public ChatBubble bubble;
 	public NavMeshAgent agent;
 	public ClientPrefs prefs;
@@ -22,20 +24,21 @@ public class Client : MonoBehaviour
 
 	public ClientStatus Status { get; set; }
 
+	[HideInInspector]
+	public ClientData clientData;
+
 	Player player;
-	Table occupiedTable;
-	Hookah smokedHookah;
+	public Table occupiedTable;
+	public Hookah smokedHookah;
 	ClientPrefs currentPrefs;
 
 	float waitingTime;
 	bool prefsSatisfied;
 
-
     void Start()
     {
 		player = FindObjectOfType<Player>();
 		currentPrefs = new ClientPrefs();
-		Enter();
     }
 
 	void Update()
@@ -136,11 +139,9 @@ public class Client : MonoBehaviour
 		return prefs.SatisfiesPrefs(smokedHookah.ContainedTobacco);
 	}
 
-	void Enter()
+	public void Enter()
 	{
 		Status = ClientStatus.Entered;
-		//Vector3 advance = new Vector3(0.3f, 0, 0);
-		//agent.SetDestination(agent.transform.position + advance);
 	}
 
 	void LookForFreeTable()
@@ -211,24 +212,26 @@ public class Client : MonoBehaviour
 		return false;
 	}
 
-
-	/*
-	 * These must also be serialized!!!
-	    Table occupiedTable;
-		Hookah smokedHookah;
-		ClientPrefs currentPrefs;
-	 */
-
+	// TODO: We must save occupiedTable and smokedHookah
 	public void Save(BinaryFormatter formatter, FileStream stream)
 	{
-		ClientData data = new ClientData(transform, this);
+		formatter.Serialize(stream, currentPrefs);
+		formatter.Serialize(stream, waitingTime);
+		formatter.Serialize(stream, prefsSatisfied);
+		formatter.Serialize(stream, (int)Status);
 
-		formatter.Serialize(stream, data);
+		formatter.Serialize(stream, new SerializedTransform(transform));
 	}
 
 	public void Load(BinaryFormatter formatter, FileStream stream)
 	{
-		ClientData data = (ClientData)formatter.Deserialize(stream);
+		currentPrefs = (ClientPrefs)formatter.Deserialize(stream);
+		waitingTime = (float)formatter.Deserialize(stream);
+		prefsSatisfied = (bool)formatter.Deserialize(stream);
+		Status = (ClientStatus)formatter.Deserialize(stream);
+
+		SerializedTransform serializedTransform = (SerializedTransform)formatter.Deserialize(stream);
+		TransformDeserializer.Deserialize(serializedTransform, transform);
 	}
 
 }

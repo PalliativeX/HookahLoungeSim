@@ -101,4 +101,9 @@ public class PlayTimer : MonoBehaviour
 	{
 		get { return Time.timeScale; }
 	}
+
+	public bool IsPaused
+	{
+		get { return Time.timeScale == 0; }
+	}
 }

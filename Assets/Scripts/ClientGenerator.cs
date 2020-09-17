@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 public class ClientGenerator : MonoBehaviour
 {
@@ -54,6 +56,16 @@ public class ClientGenerator : MonoBehaviour
 	public Client GenerateClient()
 	{
 		Client newClient = Instantiate(clientPrefabs[Random.Range(0, clientPrefabs.Length)]);
+		newClient.transform.position = spawnPlace.position;
+		newClient.Enter();
+		player.AddClient(newClient);
+
+		return newClient;
+	}
+
+	public Client GenerateClient(Client clientPrefab)
+	{
+		Client newClient = Instantiate(clientPrefab);
 		newClient.transform.position = spawnPlace.position;
 		player.AddClient(newClient);
 

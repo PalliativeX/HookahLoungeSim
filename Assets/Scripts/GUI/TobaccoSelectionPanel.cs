@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 using TMPro;
 
 public class TobaccoSelectionPanel : MonoBehaviour
@@ -9,14 +10,14 @@ public class TobaccoSelectionPanel : MonoBehaviour
     Player player;
 
     int currentValue;
-    Tobacco[] tobaccos;
+    List<Tobacco> tobaccos;
 
     public Tobacco FinallyChosenTobacco { get; set; }
 
     void Start()
     {
         player = FindObjectOfType<Player>();
-        tobaccos = player.GetTobaccos();
+        tobaccos = player.tobaccos;
         InitDropdown();
         OnValueChanged();
         UpdateDescription();

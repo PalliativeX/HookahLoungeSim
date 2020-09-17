@@ -937,7 +937,7 @@ GameObject:
   - component: {fileID: 8800255881640477258}
   - component: {fileID: 8800255881640477259}
   m_Layer: 8
-  m_Name: Main Hookah Maker 2
+  m_Name: Ira Macropiro Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1033,6 +1033,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a079637c9610784497a3cf59955cd39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prefabName: Ira Macropiro Prefab
   name: Ira Macropiro
   cost: 380
   icon: {fileID: 21300000, guid: 8461b4e3d683aad4ca0a674e5b132fbe, type: 3}

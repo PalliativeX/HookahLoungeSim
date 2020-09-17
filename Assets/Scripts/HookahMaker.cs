@@ -1,10 +1,13 @@
 ﻿using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
 
 public class HookahMaker : MonoBehaviour
 {
+	public string prefabName;
+
 	public new string name;
 	public int cost;
 	public Sprite icon;
@@ -18,10 +21,15 @@ public class HookahMaker : MonoBehaviour
 
 	bool selected;
 
-	Hookah servedHookah;
+	[HideInInspector]
+	public Hookah servedHookah;
 	bool choosingTobacco;
 	bool carryingHookah;
-	Table servedTable;
+	[HideInInspector]
+	public Table servedTable;
+
+	[HideInInspector]
+	public HookahMakerData hookahMakerData;
 
 	Queue<Action> actions;
 	Action currentAction;
@@ -208,15 +216,54 @@ public class HookahMaker : MonoBehaviour
 
 		return false;
 	}
-
-	public void Save(BinaryWriter writer)
+	
+	// TODO: We must save servedHookah and servedTable
+	public void Save(BinaryFormatter formatter, FileStream stream)
 	{
+		formatter.Serialize(stream, selected);
+		formatter.Serialize(stream, choosingTobacco);
+		formatter.Serialize(stream, carryingHookah);
+		formatter.Serialize(stream, currentAction != null);
+		//if (currentAction != null) formatter.Serialize(stream, currentAction);
 
+		formatter.Serialize(stream, actions.Count);
+		if (actions.Count != 0)
+		{
+			foreach (Action action in actions)
+			{
+				formatter.Serialize(stream, actions);
+			}
+		}
+
+		formatter.Serialize(stream, new SerializedTransform(transform));
 	}
 
-	public void Load(BinaryReader reader)
+	public void Load(BinaryFormatter formatter, FileStream stream)
 	{
+		selected = (bool)formatter.Deserialize(stream);
+		choosingTobacco = (bool)formatter.Deserialize(stream);
+		carryingHookah = (bool)formatter.Deserialize(stream);
+		bool hasCurrentAction = (bool)formatter.Deserialize(stream);
 
+		//if (hasCurrentAction)
+		//{
+			//currentAction = (Action)formatter.Deserialize(stream);
+			//currentAction.started = false;
+		//}
+
+		actions.Clear();
+		int actionsCount = (int)formatter.Deserialize(stream);
+		if (actionsCount != 0)
+		{
+			for (int i = 0; i < actionsCount; i++)
+			{
+				Action action = (Action)formatter.Deserialize(stream);
+				actions.Enqueue(action);
+			}
+		}
+
+		SerializedTransform serializedTransform = (SerializedTransform)formatter.Deserialize(stream);
+		TransformDeserializer.Deserialize(serializedTransform, transform);
 	}
 
 	public bool Selected
@@ -231,6 +278,11 @@ public class HookahMaker : MonoBehaviour
 	public bool HasServedTable
 	{
 		get { return servedTable != null; }
+	}
+
+	public bool CarryingHookah
+	{
+		get { return carryingHookah; }
 	}
 
 }
